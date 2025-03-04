@@ -1,13 +1,13 @@
-export default function UserCreate(){
+export default function UserCreate({onClose}){
     return(
         //  <!-- Create/Edit Form component  --> 
     <div className="overlay">
-      <div className="backdrop"></div>
+      <div onClick={onClose} className="backdrop"></div>
       <div className="modal">
         <div className="user-container">
           <header className="headers">
             <h2>Edit User/Add User</h2>
-            <button className="btn close">
+            <button onClick={onClose} className="btn close">
               <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="xmark"
                 className="svg-inline--fa fa-xmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
                 <path fill="currentColor"
@@ -94,7 +94,7 @@ export default function UserCreate(){
             </div>
             <div id="form-actions">
               <button id="action-save" className="btn" type="submit">Save</button>
-              <button id="action-cancel" className="btn" type="button">
+              <button onClick={onClose} id="action-cancel" className="btn" type="button">
                 Cancel
               </button>
             </div>
