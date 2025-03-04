@@ -14,6 +14,10 @@ export default function UserList(){
         .then(result => {
             setUsers(result);
         })
+        .catch((err)=>{
+            console.log(err.message);
+            return;
+        })
     }, []); 
 
     return(
@@ -134,7 +138,9 @@ export default function UserList(){
           </thead>
           <tbody>
             {/* <!-- Table row component --> */}
-            <UserListItem />
+            
+                {users.map(user => <UserListItem key={user._id} user={user}/>)}
+
           </tbody>
         </table>
       </div>
