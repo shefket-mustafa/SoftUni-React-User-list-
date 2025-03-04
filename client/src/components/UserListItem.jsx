@@ -1,3 +1,5 @@
+import { fromIsoDate } from "../utils/dateAndTimeUtils.js";
+
 export default function UserListItem({user}){
     return(
         <tr>
@@ -8,7 +10,7 @@ export default function UserListItem({user}){
               <td>{user.lastName}</td>
               <td>{user.email}</td>
               <td>{user.phoneNumber}</td>
-              <td>{user.createdAt}</td>
+              <td>{fromIsoDate(user.createdAt)}</td>
 
               <td className="actions">
                 <button className="btn edit-btn" title="Edit">
