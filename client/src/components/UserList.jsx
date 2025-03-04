@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Pagination from "./Pagination";
 import Search from "./Search";
 import UserListItem from "./UserListItem";
-import userService from "../services/userService";
+import userService from "../services/userService.js";
 import UserCreate from "./UserCreate";
 
 export default function UserList(){
@@ -28,13 +28,36 @@ export default function UserList(){
     const closeCreateUserClickHandler = () => {
         setShowCreate(false);
     };
+    const saveCreateUserClickHandler = async (e) => {
+        //stopping default refresh behaviour 
+        e.preventDefault();
+
+        //get form data
+        const formData = new FormData(e.target);
+        const userData = Object.fromEntries(formData);
+        
+        //create new user on server
+        const newUser = await userService.create(userData);
+        
+        //update local state
+        setUsers(state => [...state, newUser]); // trqbwa da wzemem taka stariq state i taka kato spreadwame w masiwa wzemame
+                                            //wsichkite elementi koito sa sushtite i dobawqme newUser kum, tqh 
+
+        //close modal
+        closeCreateUserClickHandler();
+
+    }
 
     return(
         <section className="card users-container">
       
       <Search />
 
-      {showCreate && <UserCreate onClose={closeCreateUserClickHandler} />}
+      {showCreate && 
+      <UserCreate 
+      onClose={closeCreateUserClickHandler} 
+      onSave={saveCreateUserClickHandler}
+      />}
 
       {/* <!-- Table component --> */}
       <div className="table-wrapper">
