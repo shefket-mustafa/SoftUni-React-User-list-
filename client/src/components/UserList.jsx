@@ -13,6 +13,7 @@ export default function UserList(){
     const [showCreate, setShowCreate] = useState(false);
     const [userIdInfo, setUserIdInfo] = useState();
     const [userIdDelete, setUserIdDelete] = useState(null);
+    const [userIdEdit, setUserIdEdit] = useState(null);
 
 
     useEffect(()=>{
@@ -31,13 +32,16 @@ export default function UserList(){
     };
     const closeCreateUserClickHandler = () => {
         setShowCreate(false);
+        setUserIdEdit(null);
     };
+
+      
     const saveCreateUserClickHandler = async (e) => {
         //stopping default refresh behaviour 
         e.preventDefault();
 
         //get form data
-        const formData = new FormData(e.target);
+        const formData = new FormData(e.target.parentElement.parentElement);
         const userData = Object.fromEntries(formData);
         
         //create new user on server
@@ -75,6 +79,30 @@ export default function UserList(){
             userDeleteCloseHandler(null);
     }
 
+    const userEditClickHandler = (userId) => {
+        setUserIdEdit(userId);
+    };
+
+    const saveEditUserClickHandler = async (e) => {
+        const userId = userIdEdit;
+
+        //stop submit refresh
+        e.preventDefault();
+        
+        //get formData
+        const formData = new FormData(e.target.parentElement.parentElement);
+        const userData = Object.fromEntries(formData);
+
+        //update usser on server
+         const updatedUser = await userService.update(userId, userData);
+
+        //update local state
+        setUsers(state => state.map(user => user._id === userId ? updatedUser : user))
+
+        //close modal
+        setUserIdEdit(null);
+    }
+
     return(
         <section className="card users-container">
       
@@ -91,6 +119,15 @@ export default function UserList(){
       {userIdDelete && <UserDelete 
       onClose = {userDeleteCloseHandler}
       onDelete = {userDeleteHandler}
+      />}
+
+    {userIdEdit && 
+      <UserCreate 
+      userId ={userIdEdit}
+      onClose={closeCreateUserClickHandler} 
+      onSave={saveCreateUserClickHandler}
+      onEdit={saveEditUserClickHandler}
+
       />}
 
       {/* <!-- Table component --> */}
@@ -212,6 +249,7 @@ export default function UserList(){
                 onInfoClick={userInfoClickHandler} 
                 user={user}
                 onDeleteClick={userDeleteClickHandler}
+                onEditClick = {userEditClickHandler}
                 />)}
 
           </tbody>

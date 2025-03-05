@@ -1,6 +1,6 @@
 import { fromIsoDate } from "../utils/dateAndTimeUtils.js";
 
-export default function UserListItem({user, onInfoClick, onDeleteClick }){
+export default function UserListItem({user, onInfoClick, onDeleteClick, onEditClick }){
     return(
         <tr>
               <td>
@@ -13,7 +13,7 @@ export default function UserListItem({user, onInfoClick, onDeleteClick }){
               <td>{fromIsoDate(user.createdAt)}</td>
 
               <td className="actions">
-                <button className="btn edit-btn" title="Edit">
+                <button onClick={()=> onEditClick(user._id)} className="btn edit-btn" title="Edit">
                   <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="pen-to-square"
                     className="svg-inline--fa fa-pen-to-square" role="img" xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 532 512">
