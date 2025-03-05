@@ -6,11 +6,13 @@ import UserListItem from "./UserListItem";
 import userService from "../services/userService.js";
 import UserCreate from "./UserCreate";
 import UserInfo from "./UserInfo.jsx";
+import UserDelete from "./UserDelete.jsx";
 
 export default function UserList(){
     const [users, setUsers] = useState([]);
     const [showCreate, setShowCreate] = useState(false);
     const [userIdInfo, setUserIdInfo] = useState();
+    const [userIdDelete, setUserIdDelete] = useState(null);
 
 
     useEffect(()=>{
@@ -57,6 +59,22 @@ export default function UserList(){
         setUserIdInfo(null);
     };
 
+    const userDeleteClickHandler = (userId) => {
+        setUserIdDelete(userId)
+    }
+    const userDeleteCloseHandler = () => {
+        setUserIdDelete(null);
+    }
+    const userDeleteHandler = async () => {
+            //delete request to the server 
+        await userService.delete(userIdDelete);
+            //delete from ocal state
+            setUsers(state => state.filter(user => user._id !== userIdDelete));
+
+            //close modal
+            userDeleteCloseHandler(null);
+    }
+
     return(
         <section className="card users-container">
       
@@ -69,6 +87,11 @@ export default function UserList(){
       />}
 
       { userIdInfo && <UserInfo userId={userIdInfo} onClose={userInfoCloseHandler} />}
+
+      {userIdDelete && <UserDelete 
+      onClose = {userDeleteCloseHandler}
+      onDelete = {userDeleteHandler}
+      />}
 
       {/* <!-- Table component --> */}
       <div className="table-wrapper">
@@ -184,7 +207,12 @@ export default function UserList(){
           <tbody>
             {/* <!-- Table row component --> */}
             
-                {users.map(user => <UserListItem key={user._id} onInfoClick={userInfoClickHandler} user={user}/>)}
+                {users.map(user => <UserListItem 
+                key={user._id} 
+                onInfoClick={userInfoClickHandler} 
+                user={user}
+                onDeleteClick={userDeleteClickHandler}
+                />)}
 
           </tbody>
         </table>
